@@ -9,6 +9,7 @@ import argparse
 import logging
 import sys
 import urllib3
+from bitstring import BitArray
 
 
 log = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ class KospelSnapshot:
         self.password = password
         self.filename = filename
         self.session = requests.Session()
+        self.session.verify = False
         sessid = self._get_sessid()
         if sessid:
             self.session.cookies = cookiejar_from_dict({'KOSPELSESSID': sessid})
@@ -118,8 +120,8 @@ class KospelSnapshot:
         return values
 
     def _format_float(self, value):
-        value = str(value)
-        return float('{}.{}'.format(value[0:-1], value[-1]))
+        bit_array = BitArray(uint=int(value), length=16)
+        return bit_array.int / 10
 
     def _store_values(self, values):
         with open(self.filename, 'a') as fh:
