@@ -10,6 +10,7 @@ import logging
 import sys
 import urllib3
 from bitstring import BitArray
+import pytz
 
 
 log = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ class KospelSnapshot:
         self.password = password
         self.filename = filename
         self.session = requests.Session()
+        self.now = datetime.strftime(datetime.utcnow(), '%Y-%m-%d %H:%M:%S')
         self.session.verify = False
         sessid = self._get_sessid()
         if sessid:
@@ -54,9 +56,6 @@ class KospelSnapshot:
 
     def run(self):
         payload = self._get_data()
-        if not self.filename:
-            log.info(payload)
-            return
 
         if int(payload.get('status', 0)) != 0:
             log.warning(payload)
@@ -67,11 +66,18 @@ class KospelSnapshot:
         if not payload.get('regs'):
             log.warning(payload)
             return
-        new_values = self._format_payload(payload)
+
+
+        new_values = self._format_values(payload)
+
+        if not self.filename:
+            print(json.dumps(self._format_output_dict(new_values)))
+            return
+
         prev_values = self._get_prev_values()
         if any(new_values) and new_values != prev_values:
             log.debug('Storing %s', new_values)
-            self._store_values(new_values)
+            self._store_values_csv(new_values)
         else:
             log.info('Skipping %s', new_values)
 
@@ -109,7 +115,7 @@ class KospelSnapshot:
         except (IOError, ValueError):
             return []
 
-    def _format_payload(self, payload):
+    def _format_values(self, payload):
         values = []
         for key, label in self.labels:
             value = payload['regs'][key]
@@ -123,10 +129,14 @@ class KospelSnapshot:
         bit_array = BitArray(uint=int(value), length=16)
         return bit_array.int / 10
 
-    def _store_values(self, values):
+    def _format_output_dict(self, values):
+        retval = {self.labels[i][0]: v for i, v in enumerate(values)}
+        retval["LAST_UPDATED_UTC"] = self.now
+        return retval
+
+    def _store_values_csv(self, values):
         with open(self.filename, 'a') as fh:
-            now = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-            values.insert(0, now)
+            values.insert(0, self.now)
             fh.write(self.delimiter.join([str(i) for i in values]).replace('.', ',') + '\n')
 
     def _login(self):

@@ -5,11 +5,13 @@ from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 # You can generate a Token from the "Tokens Tab" in the UI
-token = "FphusggCUIJi2NLeq41NP6fStpkzc0AA23DfVHoV9yoU9jhcqhOAK64QaJa4Z5axZfbY_CuXLRFYw5qJddZAEg=="
-org = "w17"
-bucket = "kospel"
+host = sys.argv[1]
+org = sys.argv[2]
+bucket = sys.argv[3]
+token = sys.argv[4]
+filename = sys.argv[5]
 
-client = InfluxDBClient(url="http://srv08.mikr.us:20344", token=token)
+client = InfluxDBClient(url=host, token=token)
 
 write_api = client.write_api(write_options=SYNCHRONOUS)
 
@@ -40,7 +42,7 @@ def format_lst(lst):
     return f'kospel {joined_values} {ts}'
 
 
-with open(sys.argv[1]) as fh:
+with open(filename) as fh:
     sequence = []
     for ln in fh.readlines():
         lst = ln.strip().split(';')
