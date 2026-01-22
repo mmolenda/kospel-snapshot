@@ -70,16 +70,18 @@ class KospelSnapshot:
 
         new_values = self._format_values(payload)
 
-        if not self.filename:
-            print(json.dumps(self._format_output_dict(new_values)))
-            return
+        if str(self.filename).endswith(".json") and any(new_values):
+            self._store_values_json(self._format_output_dict(new_values))
 
-        prev_values = self._get_prev_values()
-        if any(new_values) and new_values != prev_values:
-            log.debug('Storing %s', new_values)
-            self._store_values_csv(new_values)
+        elif str(self.filename).endswith(".csv"):
+            prev_values = self._get_prev_values()
+            if any(new_values) and new_values != prev_values:
+                log.debug('Storing %s', new_values)
+                self._store_values_csv(new_values)
+            else:
+                log.info('Skipping %s', new_values)
         else:
-            log.info('Skipping %s', new_values)
+            log.info(payload)
 
     def _get_sessid(self):
         try:
@@ -130,14 +132,18 @@ class KospelSnapshot:
         return bit_array.int / 10
 
     def _format_output_dict(self, values):
-        retval = {self.labels[i][0]: v for i, v in enumerate(values)}
-        retval["LAST_UPDATED_UTC"] = self.now
+        retval = {self.labels[i][0].removeprefix("TEMP_"): v for i, v in enumerate(values)}
+        retval["UPDATED"] = self.now
         return retval
 
     def _store_values_csv(self, values):
         with open(self.filename, 'a') as fh:
             values.insert(0, self.now)
             fh.write(self.delimiter.join([str(i) for i in values]).replace('.', ',') + '\n')
+
+    def _store_values_json(self, values):
+        with open(self.filename, 'w') as fh:
+            json.dump(values, fh)
 
     def _login(self):
         self._dologin()
