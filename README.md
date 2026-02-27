@@ -4,7 +4,7 @@ This stack runs two containers:
 
 - `fetcher` polls `ha.kospel.pl`, writes:
   - `/data/kospel-YYYYMM.csv` (history)
-  - `/data/kospel.json` (latest snapshot)
+  - `/data/radek/kospel.json` (latest snapshot)
 - `caddy` serves `/data` on port `40520` with HTTP basic auth.
 
 ## 1) Prepare host directory

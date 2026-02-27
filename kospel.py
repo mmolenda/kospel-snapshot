@@ -37,6 +37,7 @@ class KospelSnapshot:
 
         self.csv_prefix = output_settings["csv_prefix"]
         self.json_path = self.data_dir / output_settings["json_filename"]
+        self.json_path.parent.mkdir(parents=True, exist_ok=True)
         self.delimiter = output_settings["delimiter"]
         self.use_comma_decimal = output_settings.get("use_comma_decimal", True)
         self.poll_seconds = int(polling_settings["seconds"])

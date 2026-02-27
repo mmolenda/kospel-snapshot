@@ -8,7 +8,7 @@ verify_tls = false
 [output]
 data_dir = "/data"
 csv_prefix = "kospel"
-json_filename = "kospel.json"
+json_filename = "radek/kospel.json"
 delimiter = ";"
 use_comma_decimal = true
 
