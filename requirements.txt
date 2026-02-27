@@ -1,4 +1,4 @@
 bitstring
-influxdb_client
 pytz
-
+requests
+tiny-http-server
