@@ -6,6 +6,4 @@ OUTFILE="kospel-$(date +'%Y%m').csv"
 /root/kospel-snapshot/.venv/bin/python $KOSPEL_DIR/kospel.py -v --username $1 --password $2 --outfile $DATA_DIR/kospel.json
 tail -50 $DATA_DIR/kospel.log > $DATA_DIR/kospel-tail.log
 tail -300 $DATA_DIR/$OUTFILE > /tmp/.kosp1
-# influx_push.py host org bucket token
-python3 $KOSPEL_DIR/influx_push.py $3 $4 $5 $6 /tmp/.kosp1
 
