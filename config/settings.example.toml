@@ -1,0 +1,75 @@
+[polling]
+seconds = 120
+request_timeout_seconds = 15
+request_retries = 3
+request_backoff_factor = 1.0
+verify_tls = false
+
+[output]
+data_dir = "/data"
+csv_prefix = "kospel"
+json_filename = "kospel.json"
+delimiter = ";"
+use_comma_decimal = true
+
+[api]
+base_url = "https://ha.kospel.pl"
+module_id = 101
+dev_type = 19
+device_serial = "mi01_00001403"
+connected_device_path = "/connectedDevices"
+cmi_read_id = 254
+session_cookie_file = "/data/.sessid"
+
+[[labels]]
+key = "TEMP_IN"
+label = "Temperatura wlotowa"
+is_temperature = true
+
+[[labels]]
+key = "TEMP_OUT"
+label = "Temperatura wylotowa"
+is_temperature = true
+
+[[labels]]
+key = "FACTOR_SETTING"
+label = "Nastawa czynnika"
+is_temperature = true
+
+[[labels]]
+key = "TEMP_ROOM"
+label = "Temperatura pokojowa"
+is_temperature = true
+
+[[labels]]
+key = "TEMP_EXT"
+label = "Temperatura zewnętrzna"
+is_temperature = true
+
+[[labels]]
+key = "HU_INCLUDED_POWER"
+label = "Moc zalaczona"
+
+[[labels]]
+key = "PRESSURE"
+label = "Cisnienie"
+
+[[labels]]
+key = "FLOW"
+label = "Przeplyw"
+
+[[labels]]
+key = "FLAG_CH_PUMP_OFF_ON"
+label = "Pompa obiegowa"
+
+[[labels]]
+key = "FLAG_IN_NA"
+label = "Wejscie NA"
+
+[[labels]]
+key = "FLAG_IN_RP"
+label = "Wejscie RP"
+
+[[labels]]
+key = "FLAG_IN_FUN"
+label = "Wejscie FUN"

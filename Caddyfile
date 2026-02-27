@@ -1,0 +1,9 @@
+:40520 {
+    root * /data
+
+    basicauth * {
+        {$CADDY_USER} {$CADDY_PASSWORD_HASH}
+    }
+
+    file_server browse
+}

@@ -2,3 +2,5 @@
 *.csv
 *.log
 .venv
+.env
+data/

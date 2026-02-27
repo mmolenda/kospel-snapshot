@@ -1,0 +1,26 @@
+services:
+  fetcher:
+    build:
+      context: .
+    container_name: kospel-fetcher
+    restart: unless-stopped
+    environment:
+      KOSPEL_USERNAME: ${KOSPEL_USERNAME}
+      KOSPEL_PASSWORD: ${KOSPEL_PASSWORD}
+    volumes:
+      - /root/kospel-snapshot/data:/data
+
+  caddy:
+    image: caddy:2.8-alpine
+    container_name: kospel-http
+    restart: unless-stopped
+    depends_on:
+      - fetcher
+    ports:
+      - "40520:40520"
+    environment:
+      CADDY_USER: ${CADDY_USER}
+      CADDY_PASSWORD_HASH: ${CADDY_PASSWORD_HASH}
+    volumes:
+      - /root/kospel-snapshot/data:/data:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro

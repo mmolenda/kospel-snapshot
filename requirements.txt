@@ -1,4 +1,2 @@
 bitstring
-pytz
 requests
-tiny-http-server
